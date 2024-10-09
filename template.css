@@ -3,3 +3,81 @@ canvas {
     display: block;
     margin: 1em auto;
 }
+
+#nextLevel {
+    display: none;
+}
+
+#loss {
+    display: none;
+    color: red;
+    font-size:50px;
+}
+
+#begin {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgb(120, 187, 120);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+#win {
+    display: none;
+    color: green;
+    font-size:50px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+h1, h2 {
+    color: #007BFF;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Game-specific styles */
+#instructions {
+    top: 50%;
+    text-align: middle;
+}
+
+#references {
+    font-size: x-small;
+    margin-top: 30px;
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+    height: 450px;
+}
+
+
+
+
+
+

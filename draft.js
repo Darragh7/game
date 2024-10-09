@@ -1,15 +1,17 @@
 let canvas;
 let context;
 let now;
-// Outcome messages
+let outcome = ''; //May not need this 
 let outcome_element_l = document.querySelector('#loss');
 let outcome_element_nl = document.querySelector('#nextLevel');
-// Fps declarations 
+outcome_element_nl.style.display = 'none';
+console.log(outcome_element_nl);
+//let outcome_element_w = document.querySelector('#win');
 let fpsInterval = 1000 / 30;
 let then = Date.now();
 // These are declarations for the game loop, or the timer.
 let startTime = 0;
-let gameDuration = 15000; // 15 seconds in milliseconds
+let gameDuration = 10000; // 10 seconds in milliseconds
 let gameRunning = false;     // May not need this.
 // These are declarations for the player and mob.
 let player = {
@@ -50,13 +52,11 @@ let mob3 = {
     speed: 3.5,
   };
 // *Include other mob declarations here*
+
 // Music 
 let backgroundMusic = new Audio('battleThemeA.mp3');
 // Function to start the game and play music
 function startGameWithMusic() {
-    outcome_element_nl.style.display = 'none';
-    window.addEventListener('keydown', activate, true);
-    window.addEventListener('keyup', activate, true);
     resetGame();
     // Start the game
     startGame();
@@ -72,6 +72,10 @@ document.addEventListener('keydown', (event) => {
         startGameWithMusic();
     }
 });
+// Call the function when the page loads
+//document.addEventListener('DOMContentLoaded', () => {
+    //startGameWithMusic();
+  //});
 // These two functions are to stop and start game respectively , they may have to be moved from here.
 function startGame(){
     gameRunning = true;
@@ -81,13 +85,13 @@ function stopGame() {
     window.removeEventListener('keydown', activate, false);
     window.removeEventListener('keyup', activate, false);
     window.cancelAnimationFrame(draw);
-    //let outcome_element = document.querySelector('#outcome'); 
+    //let outcome_element = document.querySelector('#outcome');
     //outcome_element.innerHTML = outcome;
     gameRunning = false;  //may not need this
 }
 function resetGame () {
-    player.x = canvas.width / 2;
-    player.y = canvas.height - player.height;
+    window.addEventListener('keydown', activate, true);
+    window.addEventListener('keyup', activate, true); 
 }
 // This function is used to spawn the mob in a random location.
 function generateRandomPosition() {
@@ -100,11 +104,11 @@ function generateRandomPosition() {
 }
 // This function updates the mobs position based on the player's position.
 function updateMob() {
-    // Calculate the dx,dy from the mob to the player. this gives you the vector dy,dx
+    // Calculate the direction from the mob to the player
     let dx = player.x - mob.x;
     let dy = player.y - mob.y;
     // Normalize the direction vector
-    let distance = Math.sqrt(dx * dx + dy * dy); //Pythagoras
+    let distance = Math.sqrt(dx * dx + dy * dy);
     let directionX = dx / distance;
     let directionY = dy / distance;
     // Move the mob towards the player by multiplying the direction vector by the mob's speed
@@ -168,13 +172,21 @@ function updateMob3() {
         mob3.y = canvas.height - mob3.height;
     }
 }
+// This function will be later invoked for each mob
+//function isColliding(player, rect2) {
+   // return (
+        //player.x < rect2.x + rect2.width &&
+       // player.x + player.width > rect2.x &&
+        //player.y < rect2.y + rect2.height &&
+        //player.y + player.height > rect2.y
+    //);
+//}
 // This function will later be used to draw text on the canvas.
 function drawText(text, x, y, color, size) {
     context.fillStyle = color;
     context.font = size + "px Arial";
     context.fillText(text, x, y);
 }
-// Loss message 
 function showLoseMessage() {
     outcome_element_l.style.display = 'block';
     // Hide the message after a certain delay (e.g., 3 seconds)
@@ -182,6 +194,17 @@ function showLoseMessage() {
         outcome_element_l.style.display = 'none';
     }, 2500); // 2500 milliseconds (2.5 seconds)
 }
+//function showNextLevelMessage() {
+    //outcome_element_nl.style.display = 'block';
+    //outcome_element_nl.style.display = 'none';
+    //}
+    ////outcome_element_nl.style.display = 'none';
+    ////// Hide the message after a certain delay (e.g., 3 seconds)
+//}
+//function showWinMessage() {
+    //outcome_element_w.style.display = 'block';
+    // Hide the message after a certain delay (e.g., 3 seconds)
+//}
 // These declarations are for the player's movement.
 let moveLeft = false;
 let moveUp = false;
@@ -193,6 +216,8 @@ let backgroundImage = new Image();
 let mobImage = new Image();
 let mob2Image = new Image();
 let mob3Image = new Image();
+
+// *Include other mob images here*
 
 // Background array for the map.
 let tilesPerRow = 10;
@@ -290,9 +315,11 @@ function draw() {
         setTimeout(() => {
             outcome_element_nl.style.display = 'none';
             stopGame();
-        }, 100000); // 100000 milliseconds (100 seconds)
+        }, 10000); // 2500 milliseconds (2.5 seconds)
         return;
-    }
+        //showNextLevelMessage();
+        return;
+    } 
     //May have to move this invocation 
     updateMob();
     updateMob2();
@@ -309,13 +336,13 @@ function draw() {
         player.x + player.width > mob2.x &&
         player.y < mob2.y + mob2.height &&
         player.y + player.height > mob2.y
-      )  {stopGame(); showLoseMessage(); return;} 
+      )  {stopGame(); showLoseMessage(); return;} // If the player collides with the mob, restart the game)}
     if (
         player.x < mob3.x + mob3.width &&
         player.x + player.width > mob3.x &&
         player.y < mob3.y + mob3.height &&
         player.y + player.height > mob3.y
-      )  {stopGame(); showLoseMessage(); return;}
+      )  {stopGame(); showLoseMessage(); return;} // If the player collides with the mob, restart the game)}
     // Draw background on canvas 
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -402,6 +429,8 @@ function draw() {
     // Update the player 
     player.x += player.xChange;
     player.y += player.yChange;
+    // *Update the other objects here*
+
     // Boundary Checks 
     // Check left boundary
     if (player.x < 0) {
@@ -423,6 +452,13 @@ function draw() {
     let friction = 0.9;    
     player.xChange *= friction;       // Apply friction to the horizontal movement
     player.yChange *= friction;       // Apply friction to the vertical movement
+
+    // *Collisions here* 
+   // if (isColliding(player, mob)) {
+       // stopGame();
+        //console.log("Collision detected!");
+        //alert=("You have been caught by the crab!");
+   // }
     //Going left or right , up or down
     if (player.x + player.width < 0) {
         player.x = canvas.width;
@@ -482,3 +518,5 @@ function load_assets(assets, callback) {
         element.src = asset.url;
     }
 }
+    
+
